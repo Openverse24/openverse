@@ -6,24 +6,21 @@
     <title>Unity Controls</title>
 </head>
 <body>
-    <h1>Unity Controls</h1>
+<h1>Unity Controls</h1>
 
-    <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+<button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
 
-    <script>
-        let isMuted = false;
-
-        function toggleMute() {
-            // Make a GET request to the Heroku backend endpoint
-            fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/mute-status')
-                .then(response => response.json())
-                .then(data => {
-                    // Update the mute status based on the data received from the backend
-                    isMuted = data.isMuted;
-                    console.log(`Mute status: ${isMuted ? 'Muted' : 'Unmuted'}`);
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>
+<script>
+    function toggleMute() {
+        // Make a POST request to the Heroku backend endpoint to toggle mute status
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/toggle-mute', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                // Log the updated mute status received from the backend
+                console.log(`Mute status: ${data.mute_status ? 'Muted' : 'Unmuted'}`);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>
