@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Controls</title>
+</head>
+<body>
+    <h1>Unity Controls</h1>
+
+    <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+
+    <script>
+        let isMuted = false;
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            // You can perform additional actions here, like sending a request to Unity to update its state.
+            console.log(`Mute status: ${isMuted ? 'Muted' : 'Unmuted'}`);
+        }
+    </script>
+</body>
+</html>
