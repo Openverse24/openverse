@@ -3,12 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unity Controls</title>
+    <title>Co-Cre-AI-Tion Controls</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #buttonContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #topButtons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #bottomButtons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        #muteButton {
+            background-color: #c2c2c2;
+            color: #101010;
+        }
+
+        #centerSceneButton {
+            background-color: #c2c2c2;
+            color: #101010;
+        }
+
+        #chatButton {
+            background-color: #dec89f;
+            color: #101010;
+        }
+
+        #robotButton {
+            background-color: #acd2ae;
+            color: #101010;
+        }
+
+        #johanButton {
+            background-color: #8092b7;
+            color: #101010;
+        }
+
+        #statusSection {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        #lastClickedSection {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
 <h1>Unity Controls</h1>
 
-<button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+<div id="buttonContainer">
+    <div id="topButtons">
+        <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+        <button id="centerSceneButton" onclick="centerScene()">Center Scene</button>
+    </div>
+
+    <div id="bottomButtons">
+        <button id="chatButton" onclick="openChat()">Chat Window</button>
+        <button id="robotButton" onclick="showRobot()">Robot</button>
+        <button id="johanButton" onclick="callJohan()">Johan</button>
+    </div>
+
+    <div id="statusSection">Mute Status: <span id="muteStatus">Unmuted</span></div>
+    <div id="lastClickedSection">Last Clicked: <span id="lastClicked">None</span></div>
+</div>
 
 <script>
     function toggleMute() {
@@ -16,10 +109,49 @@
         fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/toggle-mute', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 // Log the updated mute status received from the backend
+                const muteStatusElement = document.getElementById('muteStatus');
+                muteStatusElement.textContent = data.mute_status ? 'Muted' : 'Unmuted';
                 console.log(`Mute status: ${data.mute_status ? 'Muted' : 'Unmuted'}`);
             })
             .catch(error => console.error('Error:', error));
+
+
+    }
+
+    function centerScene() {
+        console.log('Centering scene...');
+        // Implement the action for centering the scene if needed
+
+
+    }
+
+    function openChat() {
+        console.log('Opening chat window...');
+        // Implement the action for opening the chat window if needed
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Chat Window';
+    }
+
+    function showRobot() {
+        console.log('Showing robot...');
+        // Implement the action for showing the robot if needed
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Robot';
+    }
+
+    function callJohan() {
+        console.log('Calling Johan...');
+        // Implement the action for calling Johan if needed
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Johan';
     }
 </script>
 </body>
