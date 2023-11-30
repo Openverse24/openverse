@@ -146,14 +146,26 @@
 
     function openChat() {
        setOption('chat');
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Chat Window';
     }
 
     function showRobot() {
         setOption('robot');
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Robot';
     }
 
     function callJohan() {
         setOption('johan');
+
+        // Update last clicked button
+        const lastClickedElement = document.getElementById('lastClicked');
+        lastClickedElement.textContent = 'Johan';
     }
 </script>
 </body>
