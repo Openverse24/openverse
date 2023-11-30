@@ -50,6 +50,13 @@ def get_option():
     return jsonify({'last_clicked': option})
 
 
+# Example endpoint to toggle mute status
+@app.route('/toggle-mute', methods=['POST'])
+def toggle_mute():
+    mute_status = not read_mute_status()
+    write_mute_status(mute_status)
+    return jsonify({'mute_status': mute_status})
+
 # Example endpoint to center the scene
 @app.route('/center-scene', methods=['POST'])
 def center_scene():
