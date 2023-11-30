@@ -99,8 +99,8 @@
         <button id="johanButton" onclick="callJohan()">Johan</button>
     </div>
 
-    <div id="statusSection">Mute Status: <span id="muteStatus">Unmuted</span></div>
-    <div id="lastClickedSection">Last Clicked: <span id="lastClicked">None</span></div>
+    <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
+    <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
 </div>
 
 <script>
@@ -113,45 +113,47 @@
                 // Log the updated mute status received from the backend
                 const muteStatusElement = document.getElementById('muteStatus');
                 muteStatusElement.textContent = data.mute_status ? 'Muted' : 'Unmuted';
-                console.log(`Mute status: ${data.mute_status ? 'Muted' : 'Unmuted'}`);
+                console.log(`${data.mute_status ? 'Muted' : 'Unmuted'}`);
             })
             .catch(error => console.error('Error:', error));
-
-
     }
 
     function centerScene() {
-        console.log('Centering scene...');
-        // Implement the action for centering the scene if needed
+        // Make a POST request to the Heroku backend endpoint to center cene
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/center-cene', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
-
+    function setOption(option) {
+        // Make a POST request to the Heroku backend endpoint to set chat, robot, or johan
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/set-option', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ option }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
     }
 
     function openChat() {
-        console.log('Opening chat window...');
-        // Implement the action for opening the chat window if needed
-
-        // Update last clicked button
-        const lastClickedElement = document.getElementById('lastClicked');
-        lastClickedElement.textContent = 'Chat Window';
+       setOption('chat');
     }
 
     function showRobot() {
-        console.log('Showing robot...');
-        // Implement the action for showing the robot if needed
-
-        // Update last clicked button
-        const lastClickedElement = document.getElementById('lastClicked');
-        lastClickedElement.textContent = 'Robot';
+        setOption('robot');
     }
 
     function callJohan() {
-        console.log('Calling Johan...');
-        // Implement the action for calling Johan if needed
-
-        // Update last clicked button
-        const lastClickedElement = document.getElementById('lastClicked');
-        lastClickedElement.textContent = 'Johan';
+        setOption('johan');
     }
 </script>
 </body>
