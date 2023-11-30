@@ -14,9 +14,15 @@
         let isMuted = false;
 
         function toggleMute() {
-            isMuted = !isMuted;
-            // You can perform additional actions here, like sending a request to Unity to update its state.
-            console.log(`Mute status: ${isMuted ? 'Muted' : 'Unmuted'}`);
+            // Make a GET request to the Heroku backend endpoint
+            fetch('https://your-heroku-app.herokuapp.com/mute-status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the mute status based on the data received from the backend
+                    isMuted = data.isMuted;
+                    console.log(`Mute status: ${isMuted ? 'Muted' : 'Unmuted'}`);
+                })
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </body>
