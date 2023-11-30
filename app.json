@@ -13,7 +13,7 @@
   "environments": {
     "test": {
       "scripts": {
-        "test": "./manage.py test --debug-mode"
+        "test": "./app.py test --debug-mode"
       }
     }
   }
