@@ -5,6 +5,10 @@ app = Flask(__name__)
 # Your mute status variable
 is_muted = False
 
+@app.route("/")
+def index():
+    return "Hello this is the new version!"
+
 @app.route('/mute-status', methods=['GET'])
 def get_mute_status():
     return jsonify({'isMuted': is_muted})
