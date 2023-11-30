@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unity Controls</title>
+</head>
+<body>
+    <h1>Unity Controls</h1>
+
+    <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+
+    <script>
+        let isMuted = false;
+
+        function toggleMute() {
+            // Make a GET request to the Heroku backend endpoint
+            fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/mute-status')
+                .then(response => response.json())
+                .then(data => {
+                    // Update the mute status based on the data received from the backend
+                    isMuted = data.isMuted;
+                    console.log(`Mute status: ${isMuted ? 'Muted' : 'Unmuted'}`);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
