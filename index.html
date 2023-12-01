@@ -51,6 +51,11 @@
             color: #101010;
         }
 
+        #introductionButton {
+            background-color: #c2c2c2;
+            color: #101010;
+        }
+
         #centerSceneButton {
             background-color: #c2c2c2;
             color: #101010;
@@ -98,10 +103,10 @@
         <button id="robotButton" onclick="showRobot()">Robot</button>
         <button id="johanButton" onclick="callJohan()">Johan</button>
     </div>
-    <div id="topButtons">
+    <div id="bottomButtons">
 
         <!-- New button for Johan Introduction -->
-        <button id="johanIntroductionButton" onclick="introduction()">Johan Introduction</button>
+        <button id="introductionButton" onclick="introduction()">Johan Introduction</button>
     </div>
 
     <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
@@ -160,7 +165,7 @@
     }
 
     function openChat() {
-       setOption('chat');
+        setOption('chat');
 
         // Update last clicked button
         const lastClickedElement = document.getElementById('lastClicked');
