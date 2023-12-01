@@ -104,11 +104,14 @@
         <button id="johanButton" onclick="callJohan()">Johan</button>
     </div>
     <div id="bottomButtons">
-
         <!-- New button for Johan Introduction -->
         <button id="introductionButton" onclick="introduction()">Johan Introduction</button>
     </div>
+    <br>
 
+    <!-- Input text field for Johan Introduction -->
+    <input type="text" id="introductionText" placeholder="Enter chat window URL">
+    
     <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
     <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
 </div>
@@ -165,7 +168,22 @@
     }
 
     function openChat() {
-        setOption('chat');
+        // Get the content of the introduction text field
+        const introductionText = document.getElementById('introductionText').value;
+
+        // Make a POST request to the Heroku backend endpoint for opening chat with the text content
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/open-chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ introductionText }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
 
         // Update last clicked button
         const lastClickedElement = document.getElementById('lastClicked');
