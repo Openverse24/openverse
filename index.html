@@ -98,6 +98,11 @@
         <button id="robotButton" onclick="showRobot()">Robot</button>
         <button id="johanButton" onclick="callJohan()">Johan</button>
     </div>
+    <div id="topButtons">
+
+        <!-- New button for Johan Introduction -->
+        <button id="johanIntroductionButton" onclick="introduction()">Johan Introduction</button>
+    </div>
 
     <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
     <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
@@ -114,6 +119,16 @@
                 const muteStatusElement = document.getElementById('muteStatus');
                 muteStatusElement.textContent = data.mute_status ? 'Muted' : 'Unmuted';
                 console.log(`${data.mute_status ? 'Muted' : 'Unmuted'}`);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function introduction() {
+        // Make a POST request to the Heroku backend endpoint for Johan's introduction
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/introduce', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
             })
             .catch(error => console.error('Error:', error));
     }
