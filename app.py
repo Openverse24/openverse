@@ -8,7 +8,7 @@ CORS(app, origins=["https://moritzjenny.github.io"])
 # File path to store mute status
 mute_status_file = 'mute_status.txt'
 
-# File path to store last clicked button
+# File path to store last clicked button and introduction text
 last_clicked_file = 'last_clicked.txt'
 
 # Function to read mute status from the file
@@ -24,18 +24,22 @@ def write_mute_status(status):
     with open(mute_status_file, 'w') as file:
         file.write('true' if status else 'false')
 
-# Function to read the last clicked button from the file
+# Function to read the last clicked button and introduction text from the file
 def read_last_clicked():
     try:
         with open(last_clicked_file, 'r') as file:
             return file.read().strip()
     except FileNotFoundError:
-        return 'None'
+        return '{"last_clicked": "None", "introduction_text": ""}'
 
-# Function to write the last clicked button to the file
-def write_last_clicked(button):
+# Function to write the last clicked button and introduction text to the file
+def write_last_clicked(option, introduction_text):
+    data = {
+        'last_clicked': option,
+        'introduction_text': introduction_text
+    }
     with open(last_clicked_file, 'w') as file:
-        file.write(button)
+        file.write(json.dumps(data))
 
 # Example endpoint to toggle mute status
 @app.route('/mute-state', methods=['GET'])
@@ -46,9 +50,8 @@ def get_mute_state():
 # Example endpoint to get the currently set option
 @app.route('/get-option', methods=['GET'])
 def get_option():
-    option = read_last_clicked()
-    return jsonify({'last_clicked': option})
-
+    option_data = json.loads(read_last_clicked())
+    return jsonify(option_data)
 
 # Example endpoint to toggle mute status
 @app.route('/toggle-mute', methods=['POST'])
@@ -68,12 +71,13 @@ def center_scene():
 def set_option():
     option = request.json.get('option')
 
-    # Update last clicked button
-    write_last_clicked(option)
+    # Read introduction text from the request
+    introduction_text = request.json.get('introductionText', '')
 
+    # Update last clicked button and introduction text in the file
+    write_last_clicked(option, introduction_text)
 
-
-    return jsonify({'success': True, 'last_clicked': option})
+    return jsonify({'success': True, 'last_clicked': option, 'introduction_text': introduction_text})
 
 @app.route("/")
 def index():

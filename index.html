@@ -152,13 +152,16 @@
     }
 
     function setOption(option) {
-        // Make a POST request to the Heroku backend endpoint to set chat, robot, or johan
+        // Get the content of the introduction text field
+        const introductionText = document.getElementById('introductionText').value;
+
+        // Make a POST request to the Heroku backend endpoint to set chat, robot, or johan with the text content
         fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/set-option', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ option }),
+            body: JSON.stringify({ option, introductionText }),
         })
             .then(response => response.json())
             .then(data => {
@@ -167,23 +170,9 @@
             .catch(error => console.error('Error:', error));
     }
 
-    function openChat() {
-        // Get the content of the introduction text field
-        const introductionText = document.getElementById('introductionText').value;
 
-        // Make a POST request to the Heroku backend endpoint for opening chat with the text content
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/open-chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ introductionText }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => console.error('Error:', error));
+    function openChat() {
+        setOption('chat');
 
         // Update last clicked button
         const lastClickedElement = document.getElementById('lastClicked');
