@@ -111,7 +111,7 @@
 
     <!-- Input text field for Johan Introduction -->
     <input type="text" id="introductionText" placeholder="Enter chat window URL">
-    
+
     <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
     <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
 </div>
@@ -133,7 +133,7 @@
 
     function introduction() {
         // Make a POST request to the Heroku backend endpoint for Johan's introduction
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/introduce', { method: 'POST' })
+        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/introduction', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -150,6 +150,7 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
 
     function setOption(option) {
         // Get the content of the introduction text field
