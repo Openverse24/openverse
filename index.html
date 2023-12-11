@@ -28,7 +28,7 @@
             font-size: 16px;
         }
 
-        box {
+        .box {
             background-color:#a7d4b3;
             color: black;
             border-radius:6px;
@@ -40,7 +40,7 @@
             cursor: pointer;
         }
 
-        box.selected {
+        .box.selected {
             background-color: #ffcc00; /* Choose your desired background color for the selected box */
             color: black; /* Choose your desired text color for the selected box */
             border: 2px solid red; /* Add a red border to the selected box */
@@ -94,6 +94,11 @@
             color: #101010;
         }
 
+        #reloadSessions {
+            background-color: #c2c2c2;
+            color: #101010;
+        }
+
         #chatButton {
             background-color: #dec89f;
             color: #101010;
@@ -130,8 +135,9 @@
     //https://calm-hamlet-86218-efa11a573449.herokuapp.com
     //http://localhost:5000
     var url = "http://localhost:5000";
-    var user_ids = [2,4];
+    var user_ids = [];
     var select_box_id = 0;
+
 
     // Function to generate boxes dynamically
     function generateBoxes() {
@@ -139,7 +145,7 @@
 
         // Check if the element exists
         if (!boxContainer) {
-            console.error("Element with ID 'bottomButtons' not found.");
+            console.error("Element with ID 'boxes' not found.");
             return;
         }
 
@@ -150,7 +156,7 @@
         user_ids.forEach(function (user_id) {
             var box = document.createElement('div');
             box.className = 'box';
-            box.textContent = user_id;
+            box.textContent = user_id.toString(); // Convert to string
 
             // Add the onclick event to call the selectBox function
             box.onclick = function () {
@@ -158,7 +164,7 @@
             };
 
             // Add the "selected" class if the box corresponds to the selected_box_id
-            if (user_id == selected_box_id) {
+            if (user_id.toString() === select_box_id) {
                 box.classList.add('selected');
             }
 
@@ -168,12 +174,16 @@
     }
 
     // Call the function to generate boxes when the window has finished loading
-    window.onload = generateBoxes;
-
-
+    window.onload = function () {
+        reloadUsers();
+        generateBoxes();
+    };
+    
     function selectBox(clickedBox) {
+        // Get all the box elements
+        const allBoxes = document.querySelectorAll('.box');
+
         // Remove the "selected" class from all boxes
-        const allBoxes = document.querySelectorAll('box');
         allBoxes.forEach(box => box.classList.remove('selected'));
 
         // Add the "selected" class to the clicked box
@@ -182,22 +192,29 @@
         // Set the selected_box_id based on the content of the clicked box
         selected_box_id = clickedBox.textContent.trim();
         console.log(selected_box_id); // Corrected variable name
+
+        // Display conditional text based on selection
+        const conditionalText = document.getElementById('conditionalText');
+        if (selected_box_id && selected_box_id !== "0") {
+            conditionalText.textContent = ''; // No text when a box is selected
+        } else {
+            conditionalText.textContent = 'Please select one session ID';
+            conditionalText.style.color = 'red';
+        }
     }
 
     function reloadUsers() {
-        // Add any additional initialization or actions you want to perform on page load here.
-
+        // Fetch user IDs from the backend
         fetch(url + '/get-all-active-users', { method: 'GET' })
             .then(response => response.json())
             .then(data => {
-                // Log the updated mute status received from the backend
-                user_ids = data.users
-                console.log(user_ids);
+                // Log the updated user IDs received from the backend
+                user_ids = data.users;
+                // Regenerate boxes with updated user IDs
+                generateBoxes();
             })
             .catch(error => console.error('Error:', error));
     }
-
-    window.onload = reloadUsers;
 
     function toggleMute() {
         // Make a POST request to the Heroku backend endpoint to toggle mute status
@@ -215,7 +232,7 @@
 
     function introduction() {
         // Make a POST request to the Heroku backend endpoint for Johan's introduction
-        fetch(url + '/introduction', { method: 'POST' })
+        fetch(url + '/introduction/' + select_box_id, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -234,12 +251,18 @@
     }
 
 
+
+    function reloadSessions() {
+        reloadUsers();
+        generateBoxes();
+    }
+
     function setOption(option) {
         // Get the content of the introduction text field
         const introductionText = document.getElementById('introductionText').value;
 
         // Make a POST request to the Heroku backend endpoint to set chat, robot, or johan with the text content
-        fetch(url + '/set-option', {
+        fetch(url + '/set-option/' + select_box_id, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -284,7 +307,8 @@
 <div id="buttonContainer">
     <div id="topButtons">
         <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
-        <button id="centerSceneButton" onclick="centerScene()" disabled>Center Scene</button>
+        <!-- <button id="centerSceneButton" onclick="centerScene()" disabled>Center Scene -->
+        <button id="reloadSessions" onclick="reloadSessions()">Reload Sessions</button>
     </div>
 
     <div id="bottomButtons">
@@ -302,20 +326,16 @@
     <input type="text" id="introductionText" placeholder="Enter chat window URL">
 
     <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
-    <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
+    <div id="lastClickedSection">Selected Agent: <span id="lastClicked">None</span></div>
 
     <div style="height: 20px;"></div>
 
 
 </div>
 <div id="boxContainer">
+    <div id="conditionalText" style="color: red;">Please select one session ID</div>
     <div id="boxes">
-        <box onclick="selectBox(this)">
-            23824
-        </box>
-        <box onclick="selectBox(this)">
-            23825
-        </box>
+
     </div>
 </div>
 
