@@ -27,71 +27,6 @@ recent_users = 'recent_users.txt'
 
 temp_recent_users = []
 
-def scheduled_task():
-    global temp_recent_users
-    all_recent_users = []
-    try:
-        # Try to open the file for reading
-        with open(recent_users, 'r') as file:
-            content = file.read()
-            all_recent_users = ast.literal_eval(content)
-            old_recent_users = []
-            for user in all_recent_users:
-                if user not in temp_recent_users:
-                    old_recent_users.append(user)
-    except FileNotFoundError:
-        # If the file doesn't exist, create it
-        with open(recent_users, 'w') as file:
-            file.write("")
-            print(f"File created with initial content.")
-
-    with open(recent_users, 'w') as file:
-        file.write(str(temp_recent_users))
-
-    temp_recent_users = []
-
-    for user in old_recent_users:
-
-        # Remove mute status
-        try:
-            complete_file = json.loads(read_mute_status())
-            complete_file.pop(str(user))
-        except TypeError:
-            complete_file = {}
-        except KeyError:
-            pass
-        with open(mute_status_file, 'w') as file:
-            file.write(json.dumps(complete_file))
-
-        # Remove last clicked entry
-        complete_file = json.loads(read_last_clicked())
-        try:
-            complete_file.pop(str(user))
-        except KeyError:
-            pass
-        with open(last_clicked_file, 'w') as file:
-            file.write(json.dumps(complete_file))
-
-        # Remove introduction count entry
-        introduction_counter_data = json.loads(read_introduction())
-        try:
-            introduction_counter_data.pop(str(user))
-        except KeyError:
-            pass
-        with open(introduction_counter_file, 'w') as file:
-            file.write(json.dumps(introduction_counter_data))
-
-
-# Create a scheduler instance
-scheduler = BackgroundScheduler()
-
-# Add the scheduled task to the scheduler
-scheduler.add_job(scheduled_task, 'interval', minutes=1)
-
-# Start the scheduler when the Flask app starts
-scheduler.start()
-scheduled_task()
-
 def add_temp_recent_users(user_id):
     global temp_recent_users
     if not user_id in temp_recent_users:
@@ -251,3 +186,68 @@ def introduction(user_id):
 @app.route("/")
 def index():
     return "Co-Cre-AI-Tion Backend :) "
+
+def scheduled_task():
+    global temp_recent_users
+    all_recent_users = []
+    try:
+        # Try to open the file for reading
+        with open(recent_users, 'r') as file:
+            content = file.read()
+            all_recent_users = ast.literal_eval(content)
+            old_recent_users = []
+            for user in all_recent_users:
+                if user not in temp_recent_users:
+                    old_recent_users.append(user)
+    except FileNotFoundError:
+        # If the file doesn't exist, create it
+        with open(recent_users, 'w') as file:
+            file.write("")
+            print(f"File created with initial content.")
+
+    with open(recent_users, 'w') as file:
+        file.write(str(temp_recent_users))
+
+    temp_recent_users = []
+
+    for user in old_recent_users:
+
+        # Remove mute status
+        try:
+            complete_file = json.loads(read_mute_status())
+            complete_file.pop(str(user))
+        except TypeError:
+            complete_file = {}
+        except KeyError:
+            pass
+        with open(mute_status_file, 'w') as file:
+            file.write(json.dumps(complete_file))
+
+        # Remove last clicked entry
+        complete_file = json.loads(read_last_clicked())
+        try:
+            complete_file.pop(str(user))
+        except KeyError:
+            pass
+        with open(last_clicked_file, 'w') as file:
+            file.write(json.dumps(complete_file))
+
+        # Remove introduction count entry
+        introduction_counter_data = json.loads(read_introduction())
+        try:
+            introduction_counter_data.pop(str(user))
+        except KeyError:
+            pass
+        with open(introduction_counter_file, 'w') as file:
+            file.write(json.dumps(introduction_counter_data))
+
+
+# Create a scheduler instance
+scheduler = BackgroundScheduler()
+
+# Add the scheduled task to the scheduler
+scheduler.add_job(scheduled_task, 'interval', minutes=1)
+
+# Start the scheduler when the Flask app starts
+scheduler.start()
+scheduled_task()
