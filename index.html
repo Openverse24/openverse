@@ -28,11 +28,38 @@
             font-size: 16px;
         }
 
+        box {
+            background-color:#a7d4b3;
+            color: black;
+            border-radius:6px;
+            padding:21px;
+            font-size:151%;
+            min-width: 50px;
+            order:2;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        box.selected {
+            background-color: #ffcc00; /* Choose your desired background color for the selected box */
+            color: black; /* Choose your desired text color for the selected box */
+            border: 2px solid red; /* Add a red border to the selected box */
+        }
+
+
         #buttonContainer {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
+        #boxContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 600px;
+        }
+
 
         #topButtons {
             display: flex;
@@ -41,6 +68,12 @@
         }
 
         #bottomButtons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+
+        #boxes {
             display: flex;
             justify-content: space-around;
             width: 100%;
@@ -90,36 +123,85 @@
     </style>
 </head>
 <body>
-<h1>Unity Controls</h1>
 
-<div id="buttonContainer">
-    <div id="topButtons">
-        <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
-        <button id="centerSceneButton" onclick="centerScene()" disabled>Center Scene</button>
-    </div>
-
-    <div id="bottomButtons">
-        <button id="chatButton" onclick="openChat()">Chat Window</button>
-        <button id="robotButton" onclick="showRobot()">Robot</button>
-        <button id="johanButton" onclick="callJohan()">Johan</button>
-    </div>
-    <div id="bottomButtons">
-        <!-- New button for Johan Introduction -->
-        <button id="introductionButton" onclick="introduction()">Johan Introduction</button>
-    </div>
-    <br>
-
-    <!-- Input text field for Johan Introduction -->
-    <input type="text" id="introductionText" placeholder="Enter chat window URL">
-
-    <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
-    <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
-</div>
 
 <script>
+
+    //https://calm-hamlet-86218-efa11a573449.herokuapp.com
+    //http://localhost:5000
+    var url = "http://localhost:5000";
+    var user_ids = [2,4];
+    var select_box_id = 0;
+
+    // Function to generate boxes dynamically
+    function generateBoxes() {
+        var boxContainer = document.getElementById('boxes');
+
+        // Check if the element exists
+        if (!boxContainer) {
+            console.error("Element with ID 'bottomButtons' not found.");
+            return;
+        }
+
+        // Clear existing content
+        boxContainer.innerHTML = '';
+
+        // Iterate over user_ids and create a box for each
+        user_ids.forEach(function (user_id) {
+            var box = document.createElement('div');
+            box.className = 'box';
+            box.textContent = user_id;
+
+            // Add the onclick event to call the selectBox function
+            box.onclick = function () {
+                selectBox(box);
+            };
+
+            // Add the "selected" class if the box corresponds to the selected_box_id
+            if (user_id == selected_box_id) {
+                box.classList.add('selected');
+            }
+
+            // Append the box to the container
+            boxContainer.appendChild(box);
+        });
+    }
+
+    // Call the function to generate boxes when the window has finished loading
+    window.onload = generateBoxes;
+
+
+    function selectBox(clickedBox) {
+        // Remove the "selected" class from all boxes
+        const allBoxes = document.querySelectorAll('box');
+        allBoxes.forEach(box => box.classList.remove('selected'));
+
+        // Add the "selected" class to the clicked box
+        clickedBox.classList.add('selected');
+
+        // Set the selected_box_id based on the content of the clicked box
+        selected_box_id = clickedBox.textContent.trim();
+        console.log(selected_box_id); // Corrected variable name
+    }
+
+    function reloadUsers() {
+        // Add any additional initialization or actions you want to perform on page load here.
+
+        fetch(url + '/get-all-active-users', { method: 'GET' })
+            .then(response => response.json())
+            .then(data => {
+                // Log the updated mute status received from the backend
+                user_ids = data.users
+                console.log(user_ids);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    window.onload = reloadUsers;
+
     function toggleMute() {
         // Make a POST request to the Heroku backend endpoint to toggle mute status
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/toggle-mute', { method: 'POST' })
+        fetch(url + '/toggle-mute/' + select_box_id, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -133,7 +215,7 @@
 
     function introduction() {
         // Make a POST request to the Heroku backend endpoint for Johan's introduction
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/introduction', { method: 'POST' })
+        fetch(url + '/introduction', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -143,7 +225,7 @@
 
     function centerScene() {
         // Make a POST request to the Heroku backend endpoint to center cene
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/center-cene', { method: 'POST' })
+        fetch(url + '/center-cene', { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -157,7 +239,7 @@
         const introductionText = document.getElementById('introductionText').value;
 
         // Make a POST request to the Heroku backend endpoint to set chat, robot, or johan with the text content
-        fetch('https://calm-hamlet-86218-efa11a573449.herokuapp.com/set-option', {
+        fetch(url + '/set-option', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -196,5 +278,47 @@
         lastClickedElement.textContent = 'Johan';
     }
 </script>
+
+<h1>Unity Controls</h1>
+
+<div id="buttonContainer">
+    <div id="topButtons">
+        <button id="muteButton" onclick="toggleMute()">Toggle Mute</button>
+        <button id="centerSceneButton" onclick="centerScene()" disabled>Center Scene</button>
+    </div>
+
+    <div id="bottomButtons">
+        <button id="chatButton" onclick="openChat()">Chat Window</button>
+        <button id="robotButton" onclick="showRobot()">Robot</button>
+        <button id="johanButton" onclick="callJohan()">Johan</button>
+    </div>
+    <div id="bottomButtons">
+        <!-- New button for Johan Introduction -->
+        <button id="introductionButton" onclick="introduction()">Johan Introduction</button>
+    </div>
+    <br>
+
+    <!-- Input text field for Johan Introduction -->
+    <input type="text" id="introductionText" placeholder="Enter chat window URL">
+
+    <div id="statusSection"><span id="muteStatus">Unmuted</span></div>
+    <div id="lastClickedSection">Selected: <span id="lastClicked">None</span></div>
+
+    <div style="height: 20px;"></div>
+
+
+</div>
+<div id="boxContainer">
+    <div id="boxes">
+        <box onclick="selectBox(this)">
+            23824
+        </box>
+        <box onclick="selectBox(this)">
+            23825
+        </box>
+    </div>
+</div>
+
+
 </body>
 </html>
