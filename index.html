@@ -250,7 +250,13 @@
             .catch(error => console.error('Error:', error));
     }
 
+    window.onload = function () {
+        reloadUsers();
+        generateBoxes();
 
+        // Call the reloadUsers function every 10 seconds (adjust the interval as needed)
+        setInterval(reloadUsers, 1000);
+    };
 
     function reloadSessions() {
         selectBox(0);
