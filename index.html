@@ -204,7 +204,6 @@
     }
 
     function reloadUsers() {
-        selectBox(0);
         // Fetch user IDs from the backend
         fetch(url + '/get-all-active-users', { method: 'GET' })
             .then(response => response.json())
@@ -254,6 +253,7 @@
 
 
     function reloadSessions() {
+        selectBox(0);
         reloadUsers();
         generateBoxes();
     }
