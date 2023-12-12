@@ -195,7 +195,7 @@
 
         // Display conditional text based on selection
         const conditionalText = document.getElementById('conditionalText');
-        if (select_box_id && select_box_id !== "0") {
+        if (select_box_id && select_box_id !== "0" && clickedBox != 0) {
             conditionalText.textContent = ''; // No text when a box is selected
         } else {
             conditionalText.textContent = 'Please select one session ID';
@@ -259,7 +259,7 @@
     };
 
     function reloadSessions() {
-        select_box_id = null;
+        selectBox(0);
         reloadUsers();
         generateBoxes();
     }
