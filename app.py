@@ -185,7 +185,7 @@ def introduction(user_id):
 
 @app.route("/")
 def index():
-    return "Co-Cre-AI-Tion Backend :) "
+    return "Hello, this is the Co-Cre-AI-Tion Backend :) "
 
 def scheduled_task():
     global temp_recent_users
