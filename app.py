@@ -11,7 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 app = Flask(__name__)
-CORS(app, origins=["https://moritzjenny.github.io", "*"])
+CORS(app, origins=["https://moritzjenny.github.io", "https://openverse24.github.io", "*"])
 
 # File path to store mute status
 mute_status_file = 'mute_status.txt'
