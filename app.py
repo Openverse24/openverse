@@ -118,7 +118,7 @@ def get_mute_state(user_id):
 @app.route('/get-option/<int:user_id>', methods=['GET'])
 def get_option(user_id):
     option_data = json.loads(read_last_clicked())
-    # add_temp_recent_users(user_id)
+    add_temp_recent_users(user_id)
     try:
         user_data = option_data[str(user_id)]
     except KeyError:
@@ -130,7 +130,7 @@ def get_option(user_id):
 def get_introduction_count(user_id):
     # Read the current counter value
     data = json.loads(read_introduction())
-    add_temp_recent_users(user_id)
+    #add_temp_recent_users(user_id)
     try:
         current_counter = data[str(user_id)]
     except KeyError:
